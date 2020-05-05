@@ -1,0 +1,68 @@
+# TODO: rules have a lot to share with artiste-author (BNC-regime) and independant
+profession libérale:
+
+profession libérale . ca:
+  titre: Chiffre d'affaire
+  résumé: Le montant brut de votre chiffre d'affaire hors TVA
+  # par défaut: 0 €/mois
+  # question: Quel ca ?
+
+profession libérale . revenus:
+
+profession libérale . revenus . BNC:
+  titre: Bénéfice
+  formule:
+    allègement:
+      assiette: recettes
+      abattement:
+        variations:
+          - si: micro-bnc
+            alors: charges forfaitaires
+          - sinon: frais réels
+  remplace:
+    - dirigeant . indépendant . revenu professionnel
+
+profession libérale . revenus . BNC . micro-bnc:
+  applicable si:
+    toutes ces conditions:
+      # - recettes > 0
+      - recettes < 72500 €/an
+  par défaut: oui
+  titre: Souhaitez-vous opter pour le régime micro-BNC ?
+  résumé: Avec abattement forfaitaire fiscal de 34 % au titre des frais professionnels
+
+profession libérale . revenus . BNC . recettes:
+  titre: Chiffre d'affaire
+  résumé: Le montant brut de votre chiffre d'affaire hors TVA
+  unité: €/mois
+  question: quel CA ?
+  formule: 0 €/mois
+
+profession libérale . revenus . BNC . frais réels:
+  unité: €/mois
+  titre: Régime des frais réels BNC
+  résumé: Montant de vos dépenses (frais professionnels, amortissements…) qui seront imputées à vos recettes afin d’établir vos bénéfices ou déficits
+  par défaut: 0 €/mois
+  applicable si: recettes > 0 €/an
+  non applicable si: micro-bnc
+
+profession libérale . revenus . BNC . charges forfaitaires:
+  formule: 34% * recettes
+
+# WIP implémentation des cotisations
+
+# Retraite de base, même calcul de la cotisation pour CIPAV, CARCDSF, CAVP, CARMF, CARPIMKO, CARPV
+
+dirigeant . indépendant . cotisations et contributions . cotisations . contribution aux unions régionales des professionnels de santé:
+  acronyme: CURPS
+  applicable si: profession libérale . médecin # TODO, plus de professions
+  formule:
+    produit:
+      assiette: dirigeant . indépendant . assiette des cotisations
+      taux:
+        0,5%
+        # TODO: 0,30 % pour les chirurgiens-dentistes, pharmaciens et directeurs de laboratoires ;
+        # 0,10 % pour les infirmiers, masseurs-kinésithérapeutes, pédicures-podologues, sages-femmes, orthophonistes et orthoptistes.
+    plafond: plafond sécurité sociale temps plein * 0,5%
+  références:
+    Fiche Urssaf.fr: https://www.urssaf.fr/portail/home/independant/mes-cotisations/quelles-cotisations/la-contribution-aux-unions-regio.html
