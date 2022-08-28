@@ -695,6 +695,7 @@ impôt . foyer fiscal . impôt sur le revenu . impôt brut . sans parts rattach�
     tranches: *tranches
 
 impôt . foyer fiscal . impôt sur le revenu . impôt brut:
+  unité: €/an
   valeur:
     produit:
       assiette: impôt brut . par part
